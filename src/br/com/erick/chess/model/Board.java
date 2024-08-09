@@ -5,6 +5,12 @@ import java.util.Set;
 
 import br.com.erick.chess.application.ChessGame;
 import br.com.erick.chess.model.Piece.colors;
+import br.com.erick.chess.model.pieces.Bishop;
+import br.com.erick.chess.model.pieces.King;
+import br.com.erick.chess.model.pieces.Knight;
+import br.com.erick.chess.model.pieces.Pawn;
+import br.com.erick.chess.model.pieces.Queen;
+import br.com.erick.chess.model.pieces.Rook;
 
 public class Board {
 
@@ -14,6 +20,15 @@ public class Board {
 			{ "P", "P", "P", "P", "P", "P", "P", "P" } };
 	private String[] kingsPositions = new String[2];
 	private static final String[] letterArray = {"A", "B", "C", "D", "E", "F", "G", "H"};
+	private boolean rockMode = false;
+
+	public boolean isRockMode() {
+		return rockMode;
+	}
+
+	public void setRockMode(boolean rockMode) {
+		this.rockMode = rockMode;
+	}
 
 	public ChessGame getChessGame() {
 		return chessGame;
@@ -36,10 +51,10 @@ public class Board {
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
 				switch(i) {
-				case 0: board[i][j] = new Field(this, i, j, piecesPosition[i][j], colors.WHITE); break;
-				case 1: board[i][j] = new Field(this, i, j, piecesPosition[i][j], colors.WHITE); break;
-				case 6: board[i][j] = new Field(this, i, j, piecesPosition[1][j], colors.BLACK); break;				
-				case 7: board[i][j] = new Field(this, i, j, piecesPosition[0][j], colors.BLACK); break;
+				case 0: board[i][j] = new Field(this, i, j, piecesPosition[i][j], colors.BLACK); break;
+				case 1: board[i][j] = new Field(this, i, j, piecesPosition[i][j], colors.BLACK); break;
+				case 6: board[i][j] = new Field(this, i, j, piecesPosition[1][j], colors.WHITE); break;				
+				case 7: board[i][j] = new Field(this, i, j, piecesPosition[0][j], colors.WHITE); break;
 				default: board[i][j] = new Field(this, i, j);
 				}
 			}
@@ -48,12 +63,25 @@ public class Board {
 	}
 	
 	public void recalculeMovements() {
-			for(int i = 0; i < 8; i++) {
-				for(int j = 0; j < 8; j++) {
-					if(board[i][j].getPiece() != null)
-						board[i][j].getPiece().setPossibleMovements();
+		int[][] coord = new int[2][2];	
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				if(board[i][j].getPiece() != null) {
+					board[i][j].getPiece().setPossibleMovements();						
 				}
 			}
+		}
+	}
+	
+	public boolean isSecureField(String coord, Piece.colors enemy) {
+		Set<String> allMovs = new HashSet<String>();
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				if(board[i][j].getPiece() != null && board[i][j].getPiece().getColor() == enemy)
+				allMovs.addAll(board[i][j].getPiece().getMovements());
+			}
+		}
+		return allMovs.contains(coord) ? false: true;
 	}
 	
 	public Set<String> getSnapShot() {
@@ -92,11 +120,37 @@ public class Board {
 	}
 	
 	public colors isCheck() {
+		recalculeMovements();
 		Set<String> snapShot = getSnapShot();
 		if(snapShot.contains(kingsPositions[0]) || snapShot.contains(kingsPositions[1])) {
 			return snapShot.contains(kingsPositions[0]) ? colors.WHITE : colors.BLACK;
 		}
 		return null;
+	}
+	
+	public String promotion() {
+		for(int i = 0; i < 8; i++) {
+			if(board[0][i].getPiece() instanceof Pawn) return board[0][i].getCoordinate();
+			if(board[7][i].getPiece() instanceof Pawn) return board[7][i].getCoordinate();
+		}
+		return null;
+	}
+	
+	public void applyPromotion(String mov, String piece) {
+		int[] coord = Field.uCord(mov);
+		Field f = board[coord[0]][coord[1]];
+		Piece.colors color = f.getPiece().getColor();
+		f.getPiece().setCurrentField(null);
+		f.setPiece(null);
+		Piece p = null;
+		switch(piece) {
+		case "Queen" : p = new Queen(color, f); break;
+		case "Knight" : p = new Knight(color, f); break;
+		case "Bishop" : p = new Bishop(color, f); break;
+		case "Rook" : p = new Rook(color, f);
+		}
+		f.setPiece(p);
+		p.setCurrentField(f);
 	}
 	
 	public colors isCheckMate() {
@@ -116,7 +170,9 @@ public class Board {
 				if(board[i][j].getPiece() != null) pieceCounter++;
 			}
 		}
-		return pieceCounter <= 2 ? true : false;
+		if(pieceCounter <= 2) return pieceCounter <= 2;
+		Set<String> movs = getSnapShot();
+		return movs.isEmpty();
 	}
 	
 	public Field[][] getMatrix() {
@@ -126,6 +182,18 @@ public class Board {
 	public boolean isFieldEmpty(int x, int y) {
 		try {
 			if (this.board[x][y].getPiece() == null) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			return false;		
+		}
+	}
+	
+	public boolean isFieldEmpty(String coord) {
+		int[] cord = Field.uCord(coord);
+		try {
+			if (this.board[cord[0]][cord[1]].getPiece() == null) {
 				return true;
 			}
 			return false;

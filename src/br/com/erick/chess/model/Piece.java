@@ -15,6 +15,8 @@ public abstract class Piece {
 	private Set<String> movements = new HashSet<String>();
 	private boolean adminMode = false;
 	private boolean isFirstMovement = true;
+	private static String[] gambiarra = {"H2", "H7", "A2", "A7"}; 
+	private List<String> rock = Arrays.asList(gambiarra);
 	
 	public boolean isFirstMovement() {
 		return isFirstMovement;
@@ -26,6 +28,10 @@ public abstract class Piece {
 
 	public boolean isAdminMode() {
 		return adminMode;
+	}
+
+	public void setAdminMode(boolean adminMode) {
+		this.adminMode = adminMode;
 	}
 
 	public void setCurrentField(Field currentField) {
@@ -51,7 +57,7 @@ public abstract class Piece {
 
 	
 	public Piece move(String coordinate) {
-			if(this.getMovements().contains(coordinate) || adminMode) {
+			if(this.getMovements().contains(coordinate) || adminMode || getBoard().isRockMode()) {
 				if(!adminMode && isFirstMovement) isFirstMovement = false;
 				int[] coord = Field.uCord(coordinate);
 				Field field = getBoard().getMatrix()[coord[0]][coord[1]];
@@ -115,6 +121,10 @@ public abstract class Piece {
 		String initialPoint = this.getCurrentField().getCoordinate();
 		Set<String> secureMovements = new HashSet<>(this.movements);
 		for(String m : this.movements) {
+			if(this instanceof King && isFirstMovement && rock.contains(m)) {
+				if(getBoard().isCheck() == this.color) secureMovements.remove(m);
+				continue;					
+			}
 			Field f = getBoard().getMatrix()[Field.uCord(m)[0]][Field.uCord(m)[1]];
 			adminMode = true;
 			Piece enemy = this.move(m);

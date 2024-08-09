@@ -28,33 +28,33 @@ public class Pawn extends Piece {
 		String kRightUp = this.getCurrentField().getCoordinate(deslocation.NE);
 		String kRightDown = this.getCurrentField().getCoordinate(deslocation.SE);
 		if (this.getColor() == colors.WHITE) {
-			if (this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(down)[0], Field.uCord(down)[1])) {
-				set.add(down);
-				if (this.isFirstMovement()
-						&& this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(dDown)[0], Field.uCord(dDown)[1])) {
-					set.add(dDown);
-				}
-			}
-			if (this.getCurrentField().getBoard().hasPiece(Field.uCord(kLeftDown)[0], Field.uCord(kLeftDown)[1]) == colors.BLACK) {
-				set.add(kLeftDown);
-			}
-			if (this.getCurrentField().getBoard().hasPiece(Field.uCord(kRightDown)[0],
-					Field.uCord(kRightDown)[1]) == colors.BLACK) {
-				set.add(kRightDown);
-			}
-		} else {
-			if (this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(up)[0], Field.uCord(up)[1])) {
+			if (up != null && this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(up)[0], Field.uCord(up)[1])) {
 				set.add(up);
-				if (this.isFirstMovement()
+				if (dUp != null && this.isFirstMovement()
 						&& this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(dUp)[0], Field.uCord(dUp)[1])) {
 					set.add(dUp);
 				}
 			}
-			if (this.getCurrentField().getBoard().hasPiece(Field.uCord(kLeftUp)[0], Field.uCord(kLeftUp)[1]) == colors.WHITE) {
+			if (kLeftUp != null && this.getCurrentField().getBoard().hasPiece(Field.uCord(kLeftUp)[0], Field.uCord(kLeftUp)[1]) == colors.BLACK) {
 				set.add(kLeftUp);
 			}
-			if (this.getCurrentField().getBoard().hasPiece(Field.uCord(kRightUp)[0], Field.uCord(kRightUp)[1]) == colors.WHITE) {
+			if (kRightUp != null && this.getCurrentField().getBoard().hasPiece(Field.uCord(kRightUp)[0], Field.uCord(kRightUp)[1]) == colors.BLACK) {
 				set.add(kRightUp);
+			}
+		} else {
+			if (down != null && this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(down)[0], Field.uCord(down)[1])) {
+				set.add(down);
+				if (dDown != null && this.isFirstMovement()
+						&& this.getCurrentField().getBoard().isFieldEmpty(Field.uCord(dDown)[0], Field.uCord(dDown)[1])) {
+					set.add(dDown);
+				}
+			}
+			if (kLeftDown != null && this.getCurrentField().getBoard().hasPiece(Field.uCord(kLeftDown)[0], Field.uCord(kLeftDown)[1]) == colors.WHITE) {
+				set.add(kLeftDown);
+			}
+			if (kRightDown != null && this.getCurrentField().getBoard().hasPiece(Field.uCord(kRightDown)[0],
+					Field.uCord(kRightDown)[1]) == colors.WHITE) {
+				set.add(kRightDown);
 			}
 		}
 		this.setMovements(set);

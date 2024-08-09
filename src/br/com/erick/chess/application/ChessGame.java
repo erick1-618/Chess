@@ -54,6 +54,8 @@ public class ChessGame implements ButtonListener{
 
 	@Override
 	public void performAction(actions a, Field f) {
+		String promoted;
+		String[] promocoes = {"Queen", "Knight", "Rook", "Bishop"};
 		if(a == actions.SELECT) {
 			selectedPiece = f.getPiece();
 			currentAction = actions.MOVE;
@@ -62,6 +64,13 @@ public class ChessGame implements ButtonListener{
 			selectedPiece = null;
 			turn = turn == colors.BLACK ? colors.WHITE : colors.BLACK;
 			currentAction = actions.SELECT;
+			promoted = board.promotion();
+			if(promoted != null) {
+				int resposta = JOptionPane.showOptionDialog(gameWindow, "Choose your promotion", "Pawn promotion",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, promocoes, promocoes[0]);
+				if(resposta == JOptionPane.CLOSED_OPTION) resposta = 0;
+				board.applyPromotion(promoted, promocoes[resposta]);
+			}
 			winner = board.isCheckMate();
 			if(winner != null) {
 				JOptionPane.showMessageDialog(gameWindow, "Check Mate!\n" + winner + " team wins!");
