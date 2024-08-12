@@ -57,17 +57,12 @@ public class King extends Piece {
 
 		if(!this.isFirstMovement()) return set;
 		
-		int line0, line1;
-		line1 = this.getColor() == colors.WHITE ? 6 : 1;
-		line0 = this.getColor() == colors.WHITE ? 7 : 0;
+		int line0 = this.getColor() == colors.WHITE ? 7 : 0;
 		Piece.colors enemy = this.getColor() == colors.WHITE ? colors.BLACK : colors.WHITE;
 
 		boolean leftPiecesCheck;
 		try {
-			leftPiecesCheck = getBoard().getMatrix()[line1][0].getPiece().isFirstMovement()
-					&& getBoard().getMatrix()[line1][1].getPiece().isFirstMovement()
-					&& getBoard().getMatrix()[line1][2].getPiece().isFirstMovement()
-					&& getBoard().getMatrix()[line0][0].getPiece().isFirstMovement()
+			leftPiecesCheck = getBoard().getMatrix()[line0][0].getPiece().isFirstMovement()
 					&& getBoard().isFieldEmpty(this.getCurrentField().getCoordinate(deslocation.W))
 					&& getBoard().isFieldEmpty(this.getCurrentField().getCoordinate(deslocation.W, 2))
 					&& getBoard().isFieldEmpty(this.getCurrentField().getCoordinate(deslocation.W, 3));
@@ -77,10 +72,7 @@ public class King extends Piece {
 
 		boolean rightPiecesCheck;
 		try {
-			rightPiecesCheck = getBoard().getMatrix()[line1][5].getPiece().isFirstMovement()
-					&& getBoard().getMatrix()[line1][6].getPiece().isFirstMovement()
-					&& getBoard().getMatrix()[line1][7].getPiece().isFirstMovement()
-					&& getBoard().getMatrix()[line0][7].getPiece().isFirstMovement()
+			rightPiecesCheck =  getBoard().getMatrix()[line0][7].getPiece().isFirstMovement()
 					&& getBoard().isFieldEmpty(this.getCurrentField().getCoordinate(deslocation.E))
 					&& getBoard().isFieldEmpty(this.getCurrentField().getCoordinate(deslocation.E, 2));
 		} catch (Exception e) {
@@ -135,11 +127,11 @@ public class King extends Piece {
 			super.move("A2");
 			break;
 		case "A7":
-			getBoard().getMatrix()[0][0].getPiece().move("A6");
+			getBoard().getMatrix()[0][7].getPiece().move("A6");
 			super.move("A7");
 			break;
 		}
-		getBoard().setRockMode(true);
+		getBoard().setRockMode(false);
 		return null;
 	}
 }
