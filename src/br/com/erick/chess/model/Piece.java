@@ -15,8 +15,8 @@ public abstract class Piece {
 	private Set<String> movements = new HashSet<String>();
 	private boolean adminMode = false;
 	private boolean isFirstMovement = true;
-	private static String[] gambiarra = {"H2", "H7", "A2", "A7"}; 
-	private List<String> rock = Arrays.asList(gambiarra);
+	private static String[] possiblesRockMoves = {"H2", "H7", "A2", "A7"}; 
+	private List<String> rock = Arrays.asList(possiblesRockMoves);
 	
 	public boolean isFirstMovement() {
 		return isFirstMovement;
