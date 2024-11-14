@@ -82,8 +82,7 @@ public class King extends Piece {
 		boolean leftSecure;
 		try {
 			leftSecure = getBoard().isSecureField(this.getCurrentField().getCoordinate(deslocation.W), enemy)
-					&& getBoard().isSecureField(this.getCurrentField().getCoordinate(deslocation.W, 2), enemy)
-					&& getBoard().isSecureField(this.getCurrentField().getCoordinate(deslocation.W, 3), enemy);
+					&& getBoard().isSecureField(this.getCurrentField().getCoordinate(deslocation.W, 2), enemy);
 		} catch (Exception e) {
 			leftSecure = false;
 		}
@@ -98,12 +97,12 @@ public class King extends Piece {
 
 		if (this.getColor() == colors.WHITE) {
 			if (leftPiecesCheck && leftSecure)
-				set.add("H2");
+				set.add("H3");
 			if (rightPiecesCheck && rightSecure)
 				set.add("H7");
 		} else {
 			if (leftPiecesCheck && leftSecure)
-				set.add("A2");
+				set.add("A3");
 			if (rightPiecesCheck && rightSecure)
 				set.add("A7");
 		}
@@ -111,27 +110,57 @@ public class King extends Piece {
 	}
 
 	public Piece move(String coordinate) {
-		if(!isFirstMovement()) return super.move(coordinate);
-		getBoard().setRockMode(true);
-		switch (coordinate) {
-		case "H2":
-			getBoard().getMatrix()[7][0].getPiece().move("H3");
-			super.move("H2");
-			break;
-		case "H7":
-			getBoard().getMatrix()[7][7].getPiece().move("H6");
-			super.move("H7");
-			break;
-		case "A2":
-			getBoard().getMatrix()[0][0].getPiece().move("A3");
-			super.move("A2");
-			break;
-		case "A7":
-			getBoard().getMatrix()[0][7].getPiece().move("A6");
-			super.move("A7");
-			break;
-		}
-		getBoard().setRockMode(false);
-		return null;
+	    // Verifica se o movimento é um roque e executa a lógica do roque apenas se `coordinate` corresponde a uma posição de roque
+	    if (isFirstMovement() && getRockMovements().contains(coordinate)) {
+	        getBoard().setRockMode(true);
+	        switch (coordinate) {
+	            case "H3":
+	                getBoard().getMatrix()[7][0].getPiece().move("H4");
+	                super.move("H3");
+	                break;
+	            case "H7":
+	                getBoard().getMatrix()[7][7].getPiece().move("H6");
+	                super.move("H7");
+	                break;
+	            case "A3":
+	                getBoard().getMatrix()[0][0].getPiece().move("A4");
+	                super.move("A3");
+	                break;
+	            case "A7":
+	                getBoard().getMatrix()[0][7].getPiece().move("A6");
+	                super.move("A7");
+	                break;
+	        }
+	        getBoard().setRockMode(false);
+	        return null;
+	    } else {
+	        // Se não for um movimento de roque, executa o movimento normal
+	        return super.move(coordinate);
+	    }
 	}
+	
+//	public Piece move(String coordinate) {
+//		if(!isFirstMovement()) return super.move(coordinate);
+//		getBoard().setRockMode(true);
+//		switch (coordinate) {
+//		case "H3":
+//			getBoard().getMatrix()[7][0].getPiece().move("H4");
+//			super.move("H3");
+//			break;
+//		case "H7":
+//			getBoard().getMatrix()[7][7].getPiece().move("H6");
+//			super.move("H7");
+//			break;
+//		case "A3":
+//			getBoard().getMatrix()[0][0].getPiece().move("A4");
+//			super.move("A3");
+//			break;
+//		case "A7":
+//			getBoard().getMatrix()[0][7].getPiece().move("A6");
+//			super.move("A7");
+//			break;
+//		}
+//		getBoard().setRockMode(false);
+//		return null;
+//	}
 }
