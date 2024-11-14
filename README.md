@@ -1,6 +1,10 @@
 # Chess
 
-Implementação do jogo Xadrez, utilizando a linguagem Java, com os princípios de OO, e Swing, para interface gráfica.
+### Implementação do jogo Xadrez, utilizando a linguagem Java, com os princípios de OO, e Swing, para interface gráfica.
+
+<div>
+<a href="https://ibb.co/8snYj32"><img src="https://i.ibb.co/4tw1jyM/Captura-de-tela-2024-10-23-100719.png" alt="Captura-de-tela-2024-10-23-100719" border="0" height="400" width="400"/></a>
+</div>
 
 ## Como jogar?
 
